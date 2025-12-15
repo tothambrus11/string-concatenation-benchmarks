@@ -6,7 +6,7 @@ let benchmarks = {
     let arr = (0..<1_000_000).map({ $0 })
 
     Benchmark(
-        "LazyMap+Joined",
+        "LazyMap + Joined",
         configuration: .init(
             metrics: [
                 .wallClock, .cpuTotal, .mallocCountTotal, .mallocCountSmall, .mallocCountLarge,
@@ -30,7 +30,7 @@ let benchmarks = {
     }
 
     Benchmark(
-        "ManualConcatenation",
+        "Piecewise Manual Concatenation",
         configuration: .init(
             metrics: [
                 .wallClock, .cpuTotal, .mallocCountTotal, .mallocCountSmall, .mallocCountLarge,
@@ -52,6 +52,69 @@ let benchmarks = {
                 str += p.description
                 str += " -> "
                 str += (p * p).description
+                if i != arr.count - 1 {
+                    str += "\n"
+                }
+            }
+            str += " END"
+            blackHole(str.count)
+            benchmark.stopMeasurement()
+        }
+
+    }
+
+    
+    Benchmark(
+        "Manual Concatenation + String Interpolation",
+        configuration: .init(
+            metrics: [
+                .wallClock, .cpuTotal, .mallocCountTotal, .mallocCountSmall, .mallocCountLarge,
+                .syscalls,
+            ],
+            warmupIterations: 1,
+            scalingFactor: .one,
+            maxDuration: .seconds(10),
+            maxIterations: 1000
+        )
+    ) { benchmark in
+
+        for _ in benchmark.scaledIterations {
+            benchmark.startMeasurement()
+            var str = "BEGINNING "
+            for i in 0..<arr.count {
+                let p = arr[i]
+                str += "    \(p) -> \(p * p)"
+                if i != arr.count - 1 {
+                    str += "\n"
+                }
+            }
+            str += " END"
+            blackHole(str.count)
+            benchmark.stopMeasurement()
+        }
+
+    }
+
+    Benchmark(
+        "Manual Concatenation + Temporaries Without string interpolation",
+        configuration: .init(
+            metrics: [
+                .wallClock, .cpuTotal, .mallocCountTotal, .mallocCountSmall, .mallocCountLarge,
+                .syscalls,
+            ],
+            warmupIterations: 1,
+            scalingFactor: .one,
+            maxDuration: .seconds(10),
+            maxIterations: 1000
+        )
+    ) { benchmark in
+
+        for _ in benchmark.scaledIterations {
+            benchmark.startMeasurement()
+            var str = "BEGINNING "
+            for i in 0..<arr.count {
+                let p = arr[i]
+                str += "    " + p.description + " -> " + (p * p).description
                 if i != arr.count - 1 {
                     str += "\n"
                 }
