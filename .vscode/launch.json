@@ -1,0 +1,24 @@
+{
+    "configurations": [
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swiftbench}",
+            "name": "Debug swiftbench",
+            "target": "swiftbench",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug swiftbench"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swiftbench}",
+            "name": "Release swiftbench",
+            "target": "swiftbench",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release swiftbench"
+        }
+    ]
+}
