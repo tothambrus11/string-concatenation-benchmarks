@@ -30,6 +30,56 @@ let benchmarks = {
     }
 
     Benchmark(
+        "Reduce with string interpolation",
+        configuration: .init(
+            metrics: [
+                .wallClock, .cpuTotal, .mallocCountTotal, .mallocCountSmall, .mallocCountLarge,
+                .syscalls,
+            ],
+            warmupIterations: 1,
+            scalingFactor: .one,
+            maxDuration: .seconds(10),
+            maxIterations: 1000
+        )
+    ) { benchmark in
+
+        for _ in benchmark.scaledIterations {
+            benchmark.startMeasurement()
+            let reduced = arr.lazy.reduce(into: "") { partialResult, p in 
+                partialResult += "    \(p) -> \(p * p)\n" 
+            }
+            let str = "BEGINNING \(reduced) END"
+            blackHole(str.count)
+            benchmark.stopMeasurement()
+        }
+
+    }
+    Benchmark(
+        "Reduce with temporary strings",
+        configuration: .init(
+            metrics: [
+                .wallClock, .cpuTotal, .mallocCountTotal, .mallocCountSmall, .mallocCountLarge,
+                .syscalls,
+            ],
+            warmupIterations: 1,
+            scalingFactor: .one,
+            maxDuration: .seconds(10),
+            maxIterations: 1000
+        )
+    ) { benchmark in
+
+        for _ in benchmark.scaledIterations {
+            benchmark.startMeasurement()
+            let reduced = arr.lazy.reduce(into: "") { partialResult, p in 
+                partialResult += "    " + p.description + " -> " + (p * p).description + "\n" 
+            }
+            let str = "BEGINNING \(reduced) END"
+            blackHole(str.count)
+            benchmark.stopMeasurement()
+        }
+    }
+
+    Benchmark(
         "Piecewise Manual Concatenation",
         configuration: .init(
             metrics: [
