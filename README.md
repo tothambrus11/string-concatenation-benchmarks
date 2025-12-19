@@ -87,6 +87,7 @@ Uses functional programming with reduce:
 - `arr.lazy.reduce(into: "")` to accumulate result
 - String interpolation for formatting each element
 - Final wrapping with string interpolation
+- NOTE: does add an extra `\n` at the end too, thus doing slightly different thing than `join`.
 
 ```swift
 let reduced = arr.lazy.reduce(into: "") { partialResult, p in 
@@ -102,6 +103,7 @@ Uses functional programming with reduce and temporary strings:
 - `arr.lazy.reduce(into: "")` to accumulate result
 - Creates temporary strings with `+` operator and `.description`
 - Each element creates multiple temporary allocations
+- NOTE: does add an extra `\n` at the end too, thus doing slightly different thing than `join`.
 
 ```swift
 let reduced = arr.lazy.reduce(into: "") { partialResult, p in 
